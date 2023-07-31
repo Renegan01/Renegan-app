@@ -1,9 +1,9 @@
 import React from "react";
-import { Stack } from "expo-router";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { Slot } from "expo-router";
+import { ThemeProvider } from "../context/themeContext";
 import { Provider } from "../context/auth";
 
 SplashScreen.preventAutoHideAsync();
@@ -23,9 +23,11 @@ const Layout = () => {
 
   // return <Stack onLayout={onLayoutRootView} />;
   return (
-    <Provider>
-      <Slot />
-    </Provider>
+    <ThemeProvider>
+      <Provider>
+        <Slot onLayout={onLayoutRootView} />
+      </Provider>
+    </ThemeProvider>
   );
 };
 
