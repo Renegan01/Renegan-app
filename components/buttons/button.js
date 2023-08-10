@@ -9,7 +9,7 @@ const StyledButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  padding-vertical: 16px;
+  padding-vertical: ${({ paddingVertical }) => paddingVertical}px;
   padding-horizontal: 18px;
   gap: 10px;
 
@@ -39,6 +39,10 @@ const ButtonText = styled.Text`
   font-weight: 600;
   line-height: 24px;
   color: ${({ color }) => color};
+  ${({ textStart }) =>
+    css`
+      ${textStart && "flex: 1;"}
+    `}
 `;
 
 const LoadingIndicator = styled(ActivityIndicator)`
@@ -57,8 +61,10 @@ const Button = ({
   bgcolor = "#7F265B",
   color = "white",
   bordercolor = "#000",
+  paddingVertical = 16,
   onPress,
   children,
+  textStart = false,
   loading = false,
   ...props
 }) => {
@@ -68,13 +74,14 @@ const Button = ({
       bordercolor={bordercolor}
       color={color}
       type={type}
+      paddingVertical={paddingVertical}
       disabled={disabled || loading} // Disable the button when loading is true
       onPress={onPress}
       {...props}
     >
       {loading && <LoadingIndicator size="small" color={color} />}
       {startIcon && startIcon}
-      <ButtonText type={type} color={color}>
+      <ButtonText type={type} color={color} textStart={textStart}>
         {children}
       </ButtonText>
       {endIcon && endIcon}

@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { Slot } from "expo-router";
 import { ThemeProvider } from "../context/themeContext";
 import { Provider } from "../context/auth";
+import Toast from "react-native-toast-message";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,6 +27,7 @@ const Layout = () => {
     <ThemeProvider>
       <Provider>
         <Slot onLayout={onLayoutRootView} />
+        <Toast />
       </Provider>
     </ThemeProvider>
   );

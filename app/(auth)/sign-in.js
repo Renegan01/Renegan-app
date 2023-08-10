@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, StatusBar, StyleSheet } from "react-native";
 import InputText from "../../components/text_fields/inputText";
 import Button from "../../components/buttons/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import { useAuth } from "../../context/auth";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import styled, { useTheme } from "styled-components/native";
 import { Image } from "react-native-elements";
 import TextButton from "../../components/buttons/textButton";
 import { useThemeContext } from "../../context/themeContext";
+import { router } from "expo-router";
 
 const Wrapper = styled.ScrollView`
   flex: 1;
-  padding: 26px 0px;
+  padding: 20% 0px;
   background-color: ${({ theme }) => theme.bg};
 `;
 
@@ -92,6 +94,7 @@ const Txt = styled.Text`
 const SignIn = () => {
   const theme = useTheme();
   const themeMode = useThemeContext();
+  const { signIn } = useAuth();
   const { toggleTheme } = useThemeContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -109,6 +112,7 @@ const SignIn = () => {
 
   const handleSignIn = () => {
     toggleTheme();
+    signIn();
     // if (username === "" || password === "") {
     //   setError("Username and password are required.");
     // } else {
@@ -118,6 +122,10 @@ const SignIn = () => {
     //   // Perform your sign-in logic here
     //   // e.g., call an API to authenticate the user
     // }
+  };
+
+  const gotToSignUp = () => {
+    router.replace("/sign-up");
   };
 
   return (
@@ -264,6 +272,7 @@ const SignIn = () => {
             color={theme.primary}
             disabled={false}
             enabled={true}
+            onPress={gotToSignUp}
           />
         </AlreadyAccount>
       </View>
