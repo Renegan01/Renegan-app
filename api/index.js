@@ -13,4 +13,4 @@ export const SendOtp = async (data) =>
 export const VerifyOtp = async (data) =>
   await API.post("/auth/otpVerify", data);
 
-export const SignIn = async (data) => await API.post("/auth/signIn", data);
+export const SignInApi = async (data) => await API.post("/auth/signIn", data);

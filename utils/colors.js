@@ -2,6 +2,7 @@ const commonColor = {
   primary: "#0266ff",
   white: "#ffffff",
   black: "#000000",
+  error: "#FF5B5B",
 };
 
 export const light = {

@@ -37,7 +37,7 @@ export function Provider(props) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => setAuth({}),
+        signIn: (user) => setAuth(user),
         signOut: () => setAuth(null),
         user,
       }}

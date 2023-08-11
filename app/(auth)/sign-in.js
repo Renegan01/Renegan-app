@@ -11,6 +11,7 @@ import { Image } from "react-native-elements";
 import TextButton from "../../components/buttons/textButton";
 import { useThemeContext } from "../../context/themeContext";
 import { router } from "expo-router";
+import { SignInApi } from "../../api";
 
 const Wrapper = styled.ScrollView`
   flex: 1;
@@ -91,37 +92,86 @@ const Txt = styled.Text`
   color: ${({ theme }) => theme.text_secondary};
 `;
 
+const Errortext = styled.Text`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.error};
+  padding: 4px 0px;
+`;
+
 const SignIn = () => {
   const theme = useTheme();
   const themeMode = useThemeContext();
   const { signIn } = useAuth();
   const { toggleTheme } = useThemeContext();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+
+  // Text input state
+  const [textInput, setTextInput] = useState({
+    email: "",
+    password: "",
+  });
+
+  // Text error state
+  const [textError, setTextError] = useState({
+    email: "",
+    password: "",
+  });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-  const handleUsernameChange = (text) => {
-    setUsername(text);
+  //Verifiers Functions
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  const handlePasswordChange = (text) => {
-    setPassword(text);
+  const isPasswordValid = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  // set text input
+  const handleChange = (fieldName, value) => {
+    setTextInput((prevState) => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
+    setTextError((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: "", // Clear error when input changes
+    }));
   };
 
   const handleSignIn = () => {
-    toggleTheme();
-    signIn();
-    // if (username === "" || password === "") {
-    //   setError("Username and password are required.");
-    // } else {
-    //   setError("");
-    //   setLoading(true);
-
-    //   // Perform your sign-in logic here
-    //   // e.g., call an API to authenticate the user
-    // }
+    setError("");
+    if (!isEmailValid(textInput.email)) {
+      setTextError({ ...textError, email: "Invalid email format." });
+    } else if (!textInput.password.trim()) {
+      setTextError({ ...textError, password: "Password is required." });
+    } else if (!textInput.email.trim()) {
+      setTextError({ ...textError, email: "Email is required." });
+    } else {
+      setTextError({ ...textError, email: "", password: "" });
+      setLoading(true);
+      SignInApi({ email: textInput.email, password: textInput.password })
+        .then((res) => {
+          setLoading(false);
+          if (res.status === 200)
+            signIn({ token: res.data.token, data: res.data.user });
+        })
+        .catch((error) => {
+          setLoading(false);
+          if (error.response) {
+            setError(error.response.data.message);
+          } else {
+            setError(error.message);
+          }
+        });
+    }
   };
 
   const gotToSignUp = () => {
@@ -170,17 +220,12 @@ const SignIn = () => {
                 color={theme.text_secondary}
               />
             }
-            // endIcon={
-            //   <Verified>
-            //     <Icon name="check" size={12} color="white" />
-            //   </Verified>
-            // }
-            value={username}
-            onChangeText={handleUsernameChange}
+            value={textInput.email}
+            onChangeText={(text) => handleChange("email", text)}
             placeholder="Enter email address"
             label="Email Address"
             type={"email-address"}
-            error={error}
+            error={textError.email}
           />
           <InputText
             startIcon={
@@ -190,23 +235,16 @@ const SignIn = () => {
                 color={theme.text_secondary}
               />
             }
-            value={password}
-            onChangeText={handlePasswordChange}
+            value={textInput.password}
+            onChangeText={(text) => handleChange("password", text)}
             secureTextEntry={!isPasswordVisible}
             placeholder="Enter password"
             label="Password"
             type={"default"}
-            error={error}
+            error={textError.password}
           />
-          {/* <TextArea
-            label="Description"
-            value={description}
-            startIcon={<Icon name="lock-outline" size={24} />}
-            onChangeText={(text) => setDescription(text)}
-            error={error}
-            rows={5} // Set the initial number of rows
-            placeholder="Enter your description here..."
-          />{" "} */}
+
+          {error && <Errortext style={{ color: "red" }}>{error}</Errortext>}
         </View>
         <ForgotButton>
           <TextButton
@@ -217,7 +255,6 @@ const SignIn = () => {
             enabled={true}
           />
         </ForgotButton>
-
         <Button
           type="filled"
           color={theme.white}
@@ -244,7 +281,7 @@ const SignIn = () => {
             type="outlined"
             bordercolor={theme.text_secondary_light}
             color={theme.text_secondary}
-            loading={loading}
+            loading={socialLoading}
             onPress={handleSignIn}
           >
             Google
@@ -259,7 +296,7 @@ const SignIn = () => {
             type="outlined"
             bordercolor={theme.text_secondary_light}
             color={theme.text_secondary}
-            loading={loading}
+            loading={socialLoading}
             onPress={handleSignIn}
           >
             Microsoft

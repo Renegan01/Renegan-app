@@ -8,7 +8,11 @@ const InputContainer = styled.View`
   align-items: center;
   border-width: 1.2px;
   border-color: ${({ error, focused, theme }) =>
-    error ? "red" : focused ? theme.primary + 80 : theme.text_secondary_light};
+    error
+      ? theme.error
+      : focused
+      ? theme.primary + 80
+      : theme.text_secondary_light};
   border-radius: 10px;
   padding-horizontal: 14px;
   padding-vertical: 6px;
@@ -35,11 +39,12 @@ const Label = styled.Text`
   font-size: 10px;
   font-weight: 700;
   color: ${({ error, focused, theme }) =>
-    error ? "red" : focused ? theme.primary : theme.text_secondary};
+    error ? theme.error : focused ? theme.primary : theme.text_secondary};
 `;
 
 const ErrorText = styled.Text`
-  color: red;
+  color: ${({ theme }) => theme.error};
+  font-weight: 500;
   font-size: 10px;
 `;
 

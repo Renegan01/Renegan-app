@@ -110,6 +110,13 @@ const Txt = styled.Text`
   color: ${({ theme }) => theme.text_secondary};
 `;
 
+const Errortext = styled.Text`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.error};
+  padding: 4px 0px;
+`;
+
 const SignUp = () => {
   const theme = useTheme();
   const themeMode = useThemeContext();
@@ -616,7 +623,7 @@ const SignUp = () => {
           )}
         </Wrapper>
 
-        {error && <Text style={{ color: "red" }}>{error}</Text>}
+        {error && <Errortext style={{ color: "red" }}>{error}</Errortext>}
         {/* Continue button should submit the current step */}
         {step > 1 && (
           <Button
