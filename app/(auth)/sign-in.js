@@ -99,6 +99,12 @@ const Errortext = styled.Text`
   padding: 4px 0px;
 `;
 
+const ViewFlex = styled.View`
+  flex: 1;
+  ${({ gap }) => gap && `gap: ${gap}px;`}
+  ${({ padding }) => padding && `padding: ${padding}px;`}
+`;
+
 const SignIn = () => {
   const theme = useTheme();
   const themeMode = useThemeContext();
@@ -178,6 +184,10 @@ const SignIn = () => {
     router.replace("/sign-up");
   };
 
+  const gotToForgotPassword = () => {
+    router.replace("/forgot-password");
+  };
+
   return (
     <Wrapper>
       <StatusBar
@@ -186,32 +196,15 @@ const SignIn = () => {
         }
         backgroundColor={theme.bg} // Set the status bar color based on the theme
       />
-      <View
-        style={{
-          flex: 1,
-          padding: 16,
-          gap: 4,
-        }}
-      >
+      <ViewFlex padding={16} gap={4}>
         <Logo>Renegan</Logo>
         <HeadingText>Welcome Back 👋</HeadingText>
         <SubHeadingText>
           Welcome Back, Please Enter Your University Mail Id{" "}
         </SubHeadingText>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          padding: 16,
-          gap: 16,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            gap: 10,
-          }}
-        >
+      </ViewFlex>
+      <ViewFlex padding={16} gap={16}>
+        <ViewFlex gap={10}>
           <InputText
             startIcon={
               <Icon
@@ -244,11 +237,11 @@ const SignIn = () => {
             error={textError.password}
           />
 
-          {error && <Errortext style={{ color: "red" }}>{error}</Errortext>}
-        </View>
+          {error && <Errortext>{error}</Errortext>}
+        </ViewFlex>
         <ForgotButton>
           <TextButton
-            // onPress={handleTextButtonPress}
+            onPress={gotToForgotPassword}
             label="Forgot Password?"
             color={theme.primary}
             disabled={false}
@@ -312,7 +305,7 @@ const SignIn = () => {
             onPress={gotToSignUp}
           />
         </AlreadyAccount>
-      </View>
+      </ViewFlex>
     </Wrapper>
   );
 };

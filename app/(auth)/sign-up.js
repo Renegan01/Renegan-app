@@ -623,7 +623,7 @@ const SignUp = () => {
           )}
         </Wrapper>
 
-        {error && <Errortext style={{ color: "red" }}>{error}</Errortext>}
+        {error && <Errortext>{error}</Errortext>}
         {/* Continue button should submit the current step */}
         {step > 1 && (
           <Button
